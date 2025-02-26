@@ -1,0 +1,20 @@
+name: Build and Deploy SPA
+
+on:
+  schedule:
+    - cron: 0 8 * * * 
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          repository: 'Huimin22/SPA_APP'
+
+
+
+      
