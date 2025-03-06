@@ -52,23 +52,11 @@ jobs:
 
       - name: Upload Images to ECR
         run: |
-          FRONTEND_IMAGE_ID=$(docker images --filter=reference="spapath-frontend" --format "{{.ID}}")
-          BACKEND_IMAGE_ID=$(docker images --filter=reference="spapath-backend" --format "{{.ID}}")
-
-          echo "Found Docker Image ID (frontend): $FRONTEND_IMAGE_ID"
-          echo "Found Docker Image ID (backend): $BACKEND_IMAGE_ID"
-
-          TIMESTAMP=$(date "+%Y%m%d.%H%M%S")
-          echo "TIMESTAMP=$TIMESTAMP" >> $GITHUB_ENV
-
-          docker tag $FRONTEND_IMAGE_ID 738250824273.dkr.ecr.us-east-1.amazonaws.com/appfrontend:$TIMESTAMP
-          docker tag $FRONTEND_IMAGE_ID 738250824273.dkr.ecr.us-east-1.amazonaws.com/appfrontend:latest
-          docker push --all-tags 738250824273.dkr.ecr.us-east-1.amazonaws.com/appfrontend
-
-          docker tag $BACKEND_IMAGE_ID 738250824273.dkr.ecr.us-east-1.amazonaws.com/appbackend:$TIMESTAMP
-          docker tag $BACKEND_IMAGE_ID 738250824273.dkr.ecr.us-east-1.amazonaws.com/appbackend:latest
-          docker push --all-tags 738250824273.dkr.ecr.us-east-1.amazonaws.com/appbackend
-   
+          chmod +x infra/scripts/upload_images.sh
+          ./infra/scripts/upload_images.sh
+        
+          
+         
       # - name: Launch Temp EC2 Instance
       #   run: |
       #     INSTANCE_ID=$(aws ec2 run-instances \
