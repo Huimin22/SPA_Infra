@@ -26,12 +26,12 @@ jobs:
         run: |
           cp spapath/.env.local spapath/.env
 
-      - name: Build Images
-        run: |
-          cd spapath
-          docker compose up -d
-          docker images
-          sleep 20
+      # - name: Build Images
+      #   run: |
+      #     cd spapath
+      #     docker compose up -d
+      #     docker images
+      #     sleep 20
 
       - name: Authenticate AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -41,19 +41,19 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
       - name: Configure SSH Access
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > devop.pem
           chmod 400 devop.pem
+      
+      # - name: Login to Amazon ECR
+      #   id: login-ecr
+      #   uses: aws-actions/amazon-ecr-login@v2
 
-      - name: Upload Images to ECR
-        run: |
-          chmod +x infra/scripts/upload_images.sh
-          ./infra/scripts/upload_images.sh
+      # - name: Upload Images to ECR
+      #   run: |
+      #     chmod +x infra/scripts/upload_images.sh
+      #     ./infra/scripts/upload_images.sh
         
       - name: Launch Temp EC2 Instance
         run: |
