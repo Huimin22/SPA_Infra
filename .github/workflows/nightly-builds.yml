@@ -55,27 +55,16 @@ jobs:
           chmod +x infra/scripts/upload_images.sh
           ./infra/scripts/upload_images.sh
         
+      - name: Launch Temp EC2 Instance
+        run: |
+          chmod +x infra/scripts/launch_temp_ec2.sh
+          ./infra/scripts/launch_temp_ec2.sh
           
-         
-      # - name: Launch Temp EC2 Instance
-      #   run: |
-      #     INSTANCE_ID=$(aws ec2 run-instances \
-      #       --image-id ami-053a45fff0a704a47 \
-      #       --instance-type t2.micro \
-      #       --key-name devop \
-      #       --security-group-ids sg-0e6ad2479f4f8ae2d \
-      #       --subnet-id subnet-0be6f1d701ddf7f3c \
-      #       --query 'Instances[0].InstanceId' \
-      #       --output text)
-      #     echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
-      #     aws ec2 wait instance-running --instance-ids $INSTANCE_ID
-      #     sleep 15
-
-      # - name: Get Temp Instance ID
-      #   id: get_instance_id
-      #   run: |
-      #     INSTANCE_ID=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text)
-      #     echo "Temp INSTANCE_ID=$INSTANCE_ID"
+      - name: Get Temp Instance ID
+        id: get_instance_id
+        run: |
+          INSTANCE_ID=$(aws ec2 describe-instances --query 'Reservations[0].Instances[0].InstanceId' --output text)
+          echo "Temp INSTANCE_ID=$INSTANCE_ID"
 
       # - name: Execute Tests on Temp EC2
       #   run: |
@@ -177,6 +166,6 @@ jobs:
       #     aws ecr put-image --repository-name appbackend --image-tag ${{ env.IMAGE_TAG }} --image-manifest "$BACKEND_MANIFEST"
 
 
-      # - name: Remove Temp EC2 Server
-      #   run: |
-      #     aws ec2 terminate-instances --instance-ids ${{ env.INSTANCE_ID }}
+      - name: Remove Temp EC2 Server
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ env.INSTANCE_ID }}
